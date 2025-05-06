@@ -23,6 +23,15 @@ class Particle {
   applyForce(f) {
     this.acceleration.add(f)
   }
+
+  
+  isDead() {
+    return this.lifespan < 0
+    // if( this.lifespan < 0 ) {
+    //   return true 
+    // }
+    // return false
+  }
   
   
   static createStandardParticleAt(x,y) {
