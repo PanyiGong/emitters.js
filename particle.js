@@ -3,7 +3,7 @@ class Particle {
     this.position = createVector(x, y);
     this.velocity = p5.Vector.random2D();
     this.acceleration = p5.Vector.random2D();
-    this.r = 10;
+    this.r = random(5,10)
     this.lifespan = 255;
 
     // Assign a random color with alpha
