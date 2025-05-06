@@ -37,8 +37,10 @@ class Emitter {
       p.update()
       p.draw()    
     }
-
     // add new ones
+function mouseClicked() {
+  emitters.push( new Emitter(mouseX,mouseY) )
+}
     this.particles.push( new Particle(this.x, this.y) )     
   }
 }
