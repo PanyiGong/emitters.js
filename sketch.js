@@ -17,3 +17,28 @@ function draw() {
     e.update() 
   }
 }
+
+class Emitter {
+  constructor( x, y ) {
+    this.x = x
+    this.y = y
+    this.particles = []
+    for( let i = 0; i < 20; i++ ) {
+      this.particles.push( new Particle(this.x, this.y) )
+    }    
+  }
+  
+  update() {
+    this.particles = this.particles.filter( p => !p.isDead() )
+
+    // draw all the live ones
+    for( let p of this.particles ) {
+      p.applyForce(G)
+      p.update()
+      p.draw()    
+    }
+
+    // add new ones
+    this.particles.push( new Particle(this.x, this.y) )     
+  }
+}
