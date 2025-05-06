@@ -14,19 +14,23 @@ function setup() {
 function draw() {
   background(220);
   for( let e of emitters ) {
-    e.update() 
+    e.update()  
   }
 }
 
 class Emitter {
-  constructor( x, y ) {
-    this.x = x
-    this.y = y
-    this.particles = []
-    for( let i = 0; i < 20; i++ ) {
-      this.particles.push( new Particle(this.x, this.y) )
-    }    
+ constructor(x, y) {
+  this.x = x;
+  this.y = y;
+  this.particles = [];
+
+  this.spawnInterval = 5; // frames between new particles
+  this.frameCount = 0;
+
+  for (let i = 0; i < 20; i++) {
+    this.particles.push(new Particle(this.x, this.y));
   }
+}
   
   update() {
     this.particles = this.particles.filter( p => !p.isDead() )
@@ -37,10 +41,15 @@ class Emitter {
       p.update()
       p.draw()    
     }
+
     // add new ones
+    this.frameCount++;
+if (this.frameCount % this.spawnInterval === 0) {
+  this.particles.push(new Particle(this.x, this.y));
+}     
+  }
+}
+
 function mouseClicked() {
   emitters.push( new Emitter(mouseX,mouseY) )
-}
-    this.particles.push( new Particle(this.x, this.y) )     
-  }
 }
