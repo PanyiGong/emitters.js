@@ -35,3 +35,33 @@ class Particle {
     return new Particle(x, y);
   }
 }
+
+class CircleParticle extends Particle {
+  draw() {
+    this.color.setAlpha(this.lifespan);
+    fill(this.color);
+    circle(this.position.x, this.position.y, this.r);
+  }
+}
+
+class SquareParticle extends Particle {
+  draw() {
+    this.color.setAlpha(this.lifespan);
+    fill(this.color);
+    rectMode(CENTER);
+    square(this.position.x, this.position.y, this.r);
+  }
+}
+
+class ImageParticle extends Particle {
+  draw() {
+    if (typeof particleImg !== 'undefined') {
+      tint(255, this.lifespan);
+      imageMode(CENTER);
+      image(particleImg, this.position.x, this.position.y, this.r * 2, this.r * 2);
+    } else {
+      // fallback in case image not loaded
+      super.draw();
+    }
+  }
+}
