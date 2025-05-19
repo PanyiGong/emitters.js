@@ -1,6 +1,6 @@
 let emitters = [];
 let G;
-let emitTimer = 0; // Timer to stop emitting after mouse leaves
+let emitTimer = 0;
 
 function setup() {
   createCanvas(400, 600);
@@ -12,57 +12,69 @@ function setup() {
 function draw() {
   background(220);
 
-  // Update all emitters
   for (let e of emitters) {
     e.update();
   }
 }
 
 class Emitter {
-  constructor(x, y) {
+  constructor(x, y, type = 'circle') {
     this.x = x;
     this.y = y;
+    this.type = type;
     this.particles = [];
-    this.isEmitting = false; // Whether the emitter is emitting
-    this.spawnInterval = 5;  // Frames between new particles
+    this.isEmitting = false;
+    this.spawnInterval = 5;
     this.frameCount = 0;
-    this.emissionTime = 0; // Time to stop emitting after mouse leaves
+    this.emissionTime = 0;
+  }
+
+  createParticle() {
+    switch (this.type) {
+      case 'square':
+        return new SquareParticle(this.x, this.y);
+      case 'circle':
+      default:
+        return new CircleParticle(this.x, this.y);
+    }
   }
 
   update() {
-    // Check if mouse is hovering over the emitter
-    if (dist(mouseX, mouseY, this.x, this.y) < 50) { // Adjust 50 for trigger radius
+    if (dist(mouseX, mouseY, this.x, this.y) < 50) {
       this.isEmitting = true;
-      this.emissionTime = millis(); // Record the time when mouse enters the area
-    } else if (millis() - this.emissionTime > 500) { // Stop emitting after 3 seconds of no mouse
+      this.emissionTime = millis();
+    } else if (millis() - this.emissionTime > 500) {
       this.isEmitting = false;
     }
 
-    // Update and draw particles if emitting
     if (this.isEmitting) {
       this.frameCount++;
       if (this.frameCount % this.spawnInterval === 0) {
-        this.particles.push(new Particle(this.x, this.y));
+        this.particles.push(this.createParticle());
       }
     }
 
-    // Remove dead particles
     this.particles = this.particles.filter(p => !p.isDead());
 
-    // Draw all the live ones
     for (let p of this.particles) {
       p.applyForce(G);
       p.update();
       p.draw();
     }
+
+    
   }
 }
 
-function mouseMoved() {
-  // Add a new emitter wherever the mouse moves
-  emitters.push(new Emitter(mouseX, mouseY));
+// Add emitter on mouse click with alternating particle types
+function mouseClicked() {
+  let type = random(['circle', 'square']);
+  emitters.push(new Emitter(mouseX, mouseY, type));
 }
 
-function mouseClicked() {
-  emitters.push( new Emitter(mouseX,mouseY) )
+// Optional: also add on mouse move if you want
+function mouseMoved() {
+  let type = random(['circle', 'square']);
+  emitters.push(new Emitter(mouseX, mouseY, type));
 }
+
